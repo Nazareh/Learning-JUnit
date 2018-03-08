@@ -22,7 +22,7 @@ public class ScoreCollectionTest {
         int actualResult = sc.arithmeticMean();
 
         //Assert
-        assertThat(actualResult,equalTo(9));
+        assertThat(actualResult,equalTo(6));
 
     }
 }
