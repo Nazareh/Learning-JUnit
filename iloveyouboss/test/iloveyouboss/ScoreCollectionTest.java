@@ -6,7 +6,11 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 public class ScoreCollectionTest {
-
+    private ScoreCollection sc;
+    @Before
+    public void before(){
+        sc = new ScoreCollection();
+    }
 
     @Test
     public void arithmeticMean() {
@@ -16,7 +20,6 @@ public class ScoreCollectionTest {
     @Test
     public void answersArithmeticMeanOfTwoNumbers(){
         //Arrange
-        ScoreCollection sc = new ScoreCollection();
         sc.add(() -> 7 );
         sc.add(() -> 5 );
 
@@ -25,6 +28,22 @@ public class ScoreCollectionTest {
 
         //Assert
         assertThat(actualResult,equalTo(6));
+    }
+    @Test (expected = IllegalArgumentException.class)
+    public void throwsExceptionWhenAddinNull(){
+        ScoreCollection sc = new ScoreCollection();
+        sc.add(null);
+        sc.arithmeticMean();
+    }
 
+    @Test
+    public void answersZeroWhenNoElementAdded(){
+        assertThat(sc.arithmeticMean(),equalTo(0));
+    }
+    @Test
+    public void dealsWithIntergerOverflow(){
+        sc.add( () -> Integer.MAX_VALUE);
+        sc.add( () -> 1);
+        assertThat(sc.arithmeticMean(),equalTo(1073741824));
     }
 }
