@@ -5,8 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.awt.image.VolatileImage;
-
 import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
@@ -58,7 +56,7 @@ public class AssertTest {
 
     }
     @Test
-    public void throwsWhenWithdrawingTooMuchOldScholl (){
+    public void throwsWhenWithdrawingTooMuchOldSchool (){
         try{
             account.withdraw(100);
             fail();

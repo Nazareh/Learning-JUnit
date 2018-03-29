@@ -1,14 +1,15 @@
 package iloveyouboss;
 
-import com.sun.org.apache.xpath.internal.operations.And;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-public class ProfileTest {
-    private Profile profile;
+public class MatchSetTest {
+    private MatchSet matchSet;
     private Criteria criteria;
 
     private Question questionReimbursesTuition;
@@ -23,13 +24,17 @@ public class ProfileTest {
     private Answer answerHasOnsiteDaycare;
     private Answer answerNoOnsiteDaycare;
 
+    private AnswerCollection answers;
+
     @Before
-    public void createProfile(){
-        profile = new Profile("Bull Hockey, Inc.");
+    public void createAnswers(){
+        answers = new AnswerCollection();
+
     }
     @Before
     public void createCriteria(){
         criteria = new Criteria();
+
     }
     @Before
     public void createQuestionsAndAnswers(){
@@ -46,66 +51,67 @@ public class ProfileTest {
         answerNoOnsiteDaycare = new Answer(questionOnsiteDaycare,Bool.FALSE);
 
     }
+    private MatchSet createMatchSet() {
+        return new MatchSet(answers, criteria);
+    }
+    private void add(Answer answer){
+        answers.add (answer);
 
+    }
     @Test
     public void matchAnswersFalseWhenMustMatchCriteriaNotMet(){
-        profile.add(answerDoesNotReimbursesTuition);
+        add(answerDoesNotReimbursesTuition);
         criteria.add(new Criterion(answerReimbursesTuition,Weight.MustMatch));
-
-        boolean matches = profile.matches(criteria);
-
-        assertFalse(matches);
+        assertFalse(createMatchSet().matches());
     }
 
     @Test
     public void matchAnswersTrueForAnyDontCareCriteria(){
-        profile.add(answerDoesNotReimbursesTuition);
+        add(answerDoesNotReimbursesTuition);
         criteria.add(new Criterion(answerReimbursesTuition,Weight.DontCare));
-
-        boolean matches = profile.matches(criteria);
-        assertTrue(matches);
+        assertTrue(createMatchSet().matches());
     }
+
     @Test
     public void matchAnswerTrueWhenAnyOfMultipleCriteriaMatch(){
-        profile.add(answerThereIsRelocation);
-        profile.add(answerDoesNotReimbursesTuition);
+        add(answerThereIsRelocation);
+        add(answerDoesNotReimbursesTuition);
         criteria.add(new Criterion(answerThereIsRelocation,Weight.Important));
         criteria.add(new Criterion(answerReimbursesTuition,Weight.Important));
-        boolean matches = profile.matches(criteria);
-        assertTrue(matches);
+        assertTrue(createMatchSet().matches());
     }
     @Test
     public void matchAnswersFalseWhenNoneOfMultipleCriteriaMatch(){
-        profile.add(answerThereIsNoRelocation);
-        profile.add(answerDoesNotReimbursesTuition);
+        add(answerThereIsNoRelocation);
+        add(answerDoesNotReimbursesTuition);
         criteria.add(new Criterion(answerThereIsRelocation,Weight.Important));
         criteria.add(new Criterion(answerReimbursesTuition,Weight.Important));
 
-        boolean matches = profile.matches(criteria);
-        assertFalse(matches);
+        assertFalse(createMatchSet().matches());
     }
 
     @Test
-    public void scoreIsCriterionValueForSIngleMatch(){
-        profile.add(answerThereIsRelocation);
+    public void scoreIsCriterionValueForSingleMatch(){
+        add(answerThereIsRelocation);
         criteria.add(new Criterion(answerThereIsRelocation,Weight.Important));
 
-        profile.matches(criteria);
-        assertThat(profile.score(),equalTo(Weight.Important.getValue()));
+        assertThat(createMatchSet().getScore(),equalTo(Weight.Important.getValue()));
     }
     @Test
     public void scoreAccumulatesCriterionValuesForMatches(){
-        profile.add(answerThereIsRelocation);
-        profile.add(answerReimbursesTuition);
-        profile.add(answerNoOnsiteDaycare);
+        add(answerThereIsRelocation);
+        add(answerReimbursesTuition);
+        add(answerNoOnsiteDaycare);
         criteria.add(new Criterion(answerThereIsRelocation,Weight.Important));
         criteria.add(new Criterion(answerReimbursesTuition,Weight.WouldPrefer));
         criteria.add(new Criterion(answerNoOnsiteDaycare,Weight.VeryImportant));
 
-        profile.matches(criteria);
         int expectedScore = Weight.Important.getValue() + Weight.WouldPrefer.getValue() + Weight.VeryImportant.getValue();
 
-        assertThat(profile.score(),equalTo(expectedScore));
+        assertThat(createMatchSet().getScore(),equalTo(expectedScore));
 
     }
+
+
+
 }

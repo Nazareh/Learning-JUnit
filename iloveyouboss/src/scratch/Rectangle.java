@@ -14,7 +14,7 @@ public class Rectangle {
         this.opposite = this.origin = origin;
     }
     public int area(){
-        return (int)(Math.abs(origin.x - opposite.x) * Math.abs(origin.y - opposite.y));
+        return Math.abs(origin.x - opposite.x) * Math.abs(origin.y - opposite.y);
     }
     public void setOppositeCorner(Point opposite){
         this.opposite = opposite;

@@ -30,7 +30,7 @@ public class ScoreCollectionTest {
         assertThat(actualResult,equalTo(6));
     }
     @Test (expected = IllegalArgumentException.class)
-    public void throwsExceptionWhenAddinNull(){
+    public void throwsExceptionWhenAddingNull(){
         ScoreCollection sc = new ScoreCollection();
         sc.add(null);
         sc.arithmeticMean();
@@ -41,7 +41,7 @@ public class ScoreCollectionTest {
         assertThat(sc.arithmeticMean(),equalTo(0));
     }
     @Test
-    public void dealsWithIntergerOverflow(){
+    public void dealsWithIntegerOverflow(){
         sc.add( () -> Integer.MAX_VALUE);
         sc.add( () -> 1);
         assertThat(sc.arithmeticMean(),equalTo(1073741824));

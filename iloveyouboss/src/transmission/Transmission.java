@@ -1,7 +1,5 @@
 package transmission;
 
-import static transmission.Gear.REVERSE;
-
 public class Transmission {
     private Gear gear;
     private Moveable moveable;
