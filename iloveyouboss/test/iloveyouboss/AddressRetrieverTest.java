@@ -34,7 +34,6 @@ public class AddressRetrieverTest {
                                             + "\"country_code\":\"us\"}"
                                             + "}");
 
-        AddressRetriever retriever = new AddressRetriever();
         Address address = retriever.retrieve(38.0,-104.0);
 
         assertThat(address.getHouseNumber(), equalTo("324"));

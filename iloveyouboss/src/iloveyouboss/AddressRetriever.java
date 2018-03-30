@@ -10,7 +10,6 @@ public class AddressRetriever {
     public Address retrieve(double latitude, double longitude) throws IOException,ParseException{
         String parms = String.format("lat=%.6f&lon=%.6f",latitude,longitude);
         String response = http.get("http://open.mapquestapi.com/nominatim/v1/reverse?format=json&" + parms);
-
         JSONObject jsonObject = (JSONObject) new JSONParser().parse(response);
         JSONObject address = (JSONObject) jsonObject.get("address");
 
